@@ -4,7 +4,13 @@
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
-    glViewport(0, 0, width, height);
+    bo_Window *bo_window = (bo_Window *)glfwGetWindowUserPointer(window);
+    if (bo_window)
+    {
+        bo_window->height = height;
+        bo_window->width = width;
+        glViewport(0, 0, width, height);
+    }
 }
 
 void error_callback(int error, const char *description)
@@ -32,6 +38,8 @@ int bo_create_window(int width, int height, const char *title, bo_Window *bw)
     }
 
     bw->glfw_window = window;
+    bw->width = width;
+    bw->height = height;
 
     glfwMakeContextCurrent(bw->glfw_window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
