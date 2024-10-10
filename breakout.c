@@ -12,6 +12,12 @@
 #define WIDTH 800
 #define HEIGHT 800
 
+#define RETURN_IF_FAILED(value, return_code) \
+    if (value)                               \
+    {                                        \
+        return return_code;                  \
+    }
+
 // clang-format off
 float vertices[] = {
     // Position       
@@ -36,29 +42,16 @@ int main()
 {
 
     Window bw = {0};
-    if (!create_window(WIDTH, HEIGHT, "Breakout", &bw))
-    {
-        fprintf(stderr, "[ERROR]: Failed to create GLFW window\n");
-        return 1;
-    }
+    RETURN_IF_FAILED(!create_window(WIDTH, HEIGHT, "Brekout", &bw), 1);
 
     GLuint vertex_shader;
-    if (!create_shader(VertexShader, &vertex_shader, "first.vert"))
-    {
-        return 1;
-    };
+    RETURN_IF_FAILED(!create_shader(VertexShader, &vertex_shader, "first.vert"), 1);
 
     GLuint fragment_shader;
-    if (!create_shader(FragmentShader, &fragment_shader, "first.frag"))
-    {
-        return 1;
-    };
+    RETURN_IF_FAILED(!create_shader(FragmentShader, &fragment_shader, "first.frag"), 1);
 
     GLuint shader_program;
-    if (!create_program(&shader_program, vertex_shader, fragment_shader))
-    {
-        return 1;
-    }
+    RETURN_IF_FAILED(!create_program(&shader_program, vertex_shader, fragment_shader), 1);
 
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);

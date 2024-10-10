@@ -22,6 +22,7 @@ int create_window(int width, int height, const char *title, Window *bw)
 {
     if (!glfwInit())
     {
+        fprintf(stderr, "[ERROR]: Failed to initialize GLFW.\n");
         return 0;
     }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -34,6 +35,7 @@ int create_window(int width, int height, const char *title, Window *bw)
     GLFWwindow *window = glfwCreateWindow(width, height, title, NULL, NULL);
     if (window == NULL)
     {
+        fprintf(stderr, "[ERROR]: Failed to create window.\n");
         return 0;
     }
 
@@ -44,6 +46,7 @@ int create_window(int width, int height, const char *title, Window *bw)
     glfwMakeContextCurrent(bw->glfw_window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
+        fprintf(stderr, "[ERROR]: Failed to initialize glad.\n");
         return 0;
     }
 
