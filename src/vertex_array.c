@@ -1,10 +1,10 @@
-#include "bo_vertex_array.h"
+#include "vertex_array.h"
 
 #include "stdio.h"
 
-bo_VertexArray bo_create_vertex_array(bo_VertexBuffer vertex_buffer, GLuint *attributes, GLuint size)
+VertexArray create_vertex_array(VertexBuffer vertex_buffer, GLuint *attributes, GLuint size)
 {
-    bo_bind_vertex_buffer(vertex_buffer);
+    bind_vertex_buffer(vertex_buffer);
 
     GLuint id;
     glGenVertexArrays(1, &id);
@@ -25,20 +25,20 @@ bo_VertexArray bo_create_vertex_array(bo_VertexBuffer vertex_buffer, GLuint *att
         last += attributes[i];
     }
 
-    return (bo_VertexArray){id};
+    return (VertexArray){id};
 }
 
-void bo_bind_vertex_array(bo_VertexArray vertex_array)
+void bind_vertex_array(VertexArray vertex_array)
 {
     glBindVertexArray(vertex_array.id);
 }
 
-void bo_unbind_vertex_array()
+void unbind_vertex_array()
 {
     glBindVertexArray(0);
 }
 
-void bo_delete_vertex_array(bo_VertexArray vertex_array)
+void delete_vertex_array(VertexArray vertex_array)
 {
     glDeleteVertexArrays(1, &vertex_array.id);
 }

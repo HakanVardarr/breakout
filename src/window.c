@@ -1,10 +1,10 @@
 #include "stdio.h"
 #include "assert.h"
-#include "bo_window.h"
+#include "window.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
-    bo_Window *bo_window = (bo_Window *)glfwGetWindowUserPointer(window);
+    Window *bo_window = (Window *)glfwGetWindowUserPointer(window);
     if (bo_window)
     {
         bo_window->height = height;
@@ -18,7 +18,7 @@ void error_callback(int error, const char *description)
     fprintf(stderr, "GLFW Error (%d): %s\n", error, description);
 }
 
-int bo_create_window(int width, int height, const char *title, bo_Window *bw)
+int create_window(int width, int height, const char *title, Window *bw)
 {
     if (!glfwInit())
     {

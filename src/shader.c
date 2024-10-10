@@ -1,18 +1,18 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-#include "bo_shader.h"
+#include "shader.h"
 
-int bo_create_shader(bo_ShaderType shader_type, GLuint *shader_id, const char *shader_path)
+int create_shader(ShaderType shader_type, GLuint *shader_id, const char *shader_path)
 {
 
     const char *shader_source;
-    if (!bo_read_shader(shader_path, (char **)&shader_source))
+    if (!read_shader(shader_path, (char **)&shader_source))
     {
         fprintf(stderr, "[ERROR]: Failed to read fragment shader\n");
     }
 
-    *shader_id = glCreateShader(shader_type == bo_FragmentShader ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER);
+    *shader_id = glCreateShader(shader_type == FragmentShader ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER);
     glShaderSource(*shader_id, 1, &shader_source, NULL);
     glCompileShader(*shader_id);
 
@@ -31,7 +31,7 @@ int bo_create_shader(bo_ShaderType shader_type, GLuint *shader_id, const char *s
     return success;
 }
 
-int bo_create_program(GLuint *program_id, GLuint vertex_shader, GLuint fragment_shader)
+int create_program(GLuint *program_id, GLuint vertex_shader, GLuint fragment_shader)
 {
     *program_id = glCreateProgram();
     glAttachShader(*program_id, vertex_shader);
@@ -51,7 +51,7 @@ int bo_create_program(GLuint *program_id, GLuint vertex_shader, GLuint fragment_
     return success;
 }
 
-int bo_read_shader(const char *shader_path, char **shader_source)
+int read_shader(const char *shader_path, char **shader_source)
 {
     FILE *fd;
     char *buffer;
@@ -80,27 +80,27 @@ int bo_read_shader(const char *shader_path, char **shader_source)
     return 1;
 }
 
-void bo_use_program(GLuint program_id)
+void use_program(GLuint program_id)
 {
     glUseProgram(program_id);
 }
 
-void bo_delete_program(GLuint program_id)
+void delete_program(GLuint program_id)
 {
     glDeleteProgram(program_id);
 }
 
-void bo_program_set_bool(GLuint program_id, const char *name, bool value)
+void program_set_bool(GLuint program_id, const char *name, bool value)
 {
     glUniform1i(glGetUniformLocation(program_id, name), (int)value);
 }
 
-void bo_program_set_int(GLuint program_id, const char *name, int value)
+void program_set_int(GLuint program_id, const char *name, int value)
 {
     glUniform1i(glGetUniformLocation(program_id, name), value);
 }
 
-void bo_program_set_float(GLuint program_id, const char *name, float value)
+void program_set_float(GLuint program_id, const char *name, float value)
 {
     glUniform1f(glGetUniformLocation(program_id, name), value);
 }
