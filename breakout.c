@@ -1,3 +1,5 @@
+#define STB_IMAGE_IMPLEMENTATION
+
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -8,6 +10,7 @@
 #include "vertex_buffer.h"
 #include "vertex_array.h"
 #include "index_buffer.h"
+#include "texture.h"
 
 #define WIDTH 800
 #define HEIGHT 800
@@ -19,14 +22,16 @@
     }
 
 // clang-format off
-float vertices[] = {
-    // Position       
-     0.0f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-     0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+ float vertices[] = {
+// positions          // colors           // texture coords
+     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
 };
 unsigned int indices[] = {
-    0, 1, 2,
+    0, 1, 3, // first triangle
+    1, 2, 3  // second triangle
 };
 // clang-format on
 
@@ -44,6 +49,9 @@ int main()
     Window bw = {0};
     RETURN_IF_FAILED(!create_window(WIDTH, HEIGHT, "Brekout", &bw), 1);
 
+    GLuint container_texture;
+    RETURN_IF_FAILED(!create_texture("container.jpg", &container_texture), 1);
+
     GLuint vertex_shader;
     RETURN_IF_FAILED(!create_shader(VertexShader, &vertex_shader, "first.vert"), 1);
 
@@ -56,7 +64,7 @@ int main()
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
 
-    GLuint attributes[] = {3, 3};
+    GLuint attributes[] = {3, 3, 2};
     VertexBuffer VBO = create_vertex_buffer(vertices, sizeof(vertices));
     VertexArray VAO = create_vertex_array(VBO, attributes, sizeof(attributes));
     IndexBuffer EBO = create_index_buffer(indices, sizeof(indices));
@@ -66,6 +74,9 @@ int main()
 
     while (!glfwWindowShouldClose(bw.glfw_window))
     {
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         use_program(shader_program);
         program_set_float(shader_program, "time", (float)glfwGetTime());
         draw_program(shader_program, VAO, EBO);
